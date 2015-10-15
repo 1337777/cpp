@@ -1,0 +1,322 @@
+%% LyX 2.1.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[twocolumn,english,natbib]{sigplanconf}
+\usepackage[T1]{fontenc}
+\usepackage{babel}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[all]{xy}
+\usepackage[unicode=true,
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+\hypersetup{pdftitle={MACLANE PENTAGON COHERENCE IS SOME RECURSIVE COMONADIC DESCENT},
+ pdfauthor={1337777.NET}}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+% DO NOT ALTER THIS PREAMBLE!!!
+%
+% This preamble is designed to ensure that the file prints
+% out as advertised. If you mess with this preamble,
+% parts of this document may not print out as expected.  If you
+% have problems LaTeXing this file, please contact 
+% the documentation team
+% email: lyx-docs@lists.lyx.org
+
+\usepackage[all]{xy}
+
+% define new commands used in sec. 5.1
+\newcommand{\xyR}[1]{
+  \xydef@\xymatrixrowsep@{#1}}
+\newcommand{\xyC}[1]{
+  \xydef@\xymatrixcolsep@{#1}}
+
+\newdir{|>}{!/4.5pt/@{|}*:(1,-.2)@^{>}*:(1,+.2)@_{>}}
+
+% a pdf-bookmark for the TOC is added
+\let\myTOC\tableofcontents
+\renewcommand\tableofcontents{%
+  \pdfbookmark[1]{\contentsname}{}
+  \myTOC }
+
+% redefine the \LyX macro for PDF bookmarks
+\def\LyX{\texorpdfstring{%
+  L\kern-.1667em\lower.25em\hbox{Y}\kern-.125emX\@}
+  {LyX}}
+
+% if pdflatex is used
+\usepackage{ifpdf}
+\ifpdf
+
+% set fonts for nicer pdf view
+\IfFileExists{lmodern.sty}
+ {\usepackage{lmodern}}{}
+
+\fi % end if pdflatex is used
+
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+%\usepackage{fullpage}
+
+\usepackage{coqdoc}
+\renewcommand{\coqdocind}[1]{\textsf{#1}}
+
+\usepackage{amsmath,amssymb}
+\usepackage{url}
+ \usepackage{hyperref}
+% \usepackage{makeidx,hyperref}
+
+\makeatother
+
+\begin{document}
+
+
+
+\conferenceinfo{GCC 1337}{January 13--31, 1337, Burgpeters, Dariflo, UAS.}
+
+
+\CopyrightYear{1337}
+
+
+\copyrightdata{1-59593-057-4/05/0004}
+
+
+\title{MACLANE PENTAGON COHERENCE IS SOME RECURSIVE COMONADIC DESCENT}
+
+
+\authorinfo{1337777.NET}{}{ HTTPS://GITHUB.COM/1337777}
+\maketitle
+\begin{abstract}
+This Coq text shows that Dosen semiassociative coherence covers Maclane
+associative coherence by some recursive comonadic adjunction (descent?),
+{$\text{embedding }:\ \text{SemiAssoc}\leftrightarrows\text{Assoc}\ :\text{ flattening reflection}$.
+} This text is some initial attempt to respond to Chlipala ``Compositional
+Computational Reflection'' \cite{chlipala}, by seeing this ``compositional''
+as truly functorial and by seeing this ``computational reflection''
+as truly comonadic. This text also explains the motivations and future
+programme, which is related to Yanofsky text ``The outer limits of
+reason''.
+\end{abstract}
+\category{F.4.1}{Mathematical Logic And Formal Languages}{Mechanical Theorem Proving}
+
+
+
+
+\keywords{Coq, Coherence, Comonadic descent, Automation}
+
+
+\section{Contents }
+
+Categories \cite{borceux} study the interaction between reflections
+and limits. The basic configuration for reflections is : 
+\[
+\xyC{5pc}\xyR{5pc}\xymatrix{\text{CoMod}\ar[r]^{\text{{reflection}}}\ar[d]_{\text{{identity}}}\ar@{}[ddr]\sp(0.2){\underset{\Longrightarrow}{\text{unit}}} & \text{Mod}\ar[dl]^{\text{{coreflection}}}\\
+\text{CoMod}\ar[d]_{\text{{reification}}} & \ \\
+\text{Modos} & \ 
+}
+\]
+ where, for all $\text{reification}$ functor into any $\text{Modos}$
+category, the map 
+\[
+(\ \_\star\text{reflection})\circ(\text{reification}\star\text{unit})
+\]
+ is bijective; or same, for all object $M'$ in $\text{CoMod}$, the
+polymorphic in $M$ map 
+\[
+(\text{coreflection}\ \_\ )\circ\text{unit}_{M'}:\text{Mod}(\text{reflection }M',M)
+\]
+\[
+\rightarrow\text{CoMod}(M',\text{coreflection }M)
+\]
+is bijective, and being also polymorphic in $M'$ therefore has reverse
+map of the form $\text{counit}_{M}\circ(\text{reflection }\_\ )$
+whose reversal equations is polymorphically determined by 
+\begin{eqnarray*}
+(\text{coreflection}\star\text{counit})\circ(\text{unit}\star\text{coreflection}) & = & \text{identity}\\
+(\text{counit}\star\text{reflection})\circ(\text{reflection}\star\text{unit}) & = & \text{identity\ }.
+\end{eqnarray*}
+ And it is said that the $\text{unit}$ natural/polymorphic/commuting
+transformation is the \emph{unit of the reflection} and the reflective
+pair $(\text{reification}\circ\text{coreflection},\text{reification}\star\text{unit})$
+is some \emph{coreflective (``Kan'') extension functor} of the $\text{reification}$
+functor along the $\text{reflection}$ functor. This text shows some
+comonadic adjunction, { $\text{embedding }:\ \text{SemiAssoc}\leftrightarrows\text{Assoc}\ :\text{ flattening reflection}$.
+}
+
+Categories \cite{borceuxjanelidze} \cite{borceux} converge to the
+\emph{descent technique}, this convergence is from both the \emph{functorial
+semantics technique} with the \emph{monadic adjunctions technique}.
+Now functorial semantics starts when one attempts to \emph{internalize}
+the common phrasing of the logician model semantics, and this internalization
+has as consequence some functionalization/functorialization saturation/normalization
+of the original theory into some more synthetic theory; note that
+here the congruence saturation is some instance of postfix function
+composition and the substitution saturation is some instance of prefix
+function composition. The ``Yoneda''/normalization lemma takes its
+sense here. And among all the relations between synthetic theories,
+get the \emph{tensor of theories}, which is some \emph{extension of
+theories}, and which is the coproduct (disjoint union) of all the
+operations of the component theories quotiented by extra \emph{commutativity}
+between any two operations from any two distinct component theories;
+for example the tensor of two rings with units as synthetic theories
+gives the bimodules as functorial models.
+
+Now Galois says that any radical extension of all the \emph{symmetric
+functions} in some indeterminates, which also contains those indeterminates,
+is abe to be incrementally/resolvably saturated/``algebra'' as some
+further radical extension whose interesting endomorphisms include
+all the permutations of the indeterminates. And when there are many
+indeterminates, then some of those permutations are properly preserved
+down the resolution ... but the resolution vanish any permutation
+! In this context of saturated extensions, one then views any polynomial
+instead as its quotient/ideal of some ring of polynomials and then
+pastes such quotients into ``algebraic algebras'' or ``spectrums''
+or ``schemes'' .. This is Galois descent along Borceux-Janelidze-Tholen
+\cite{borceuxjanelidze}
+
+Now \emph{automation programmation} \cite{harper} \cite{chlipalacpdt}
+study the interaction between some meta grammar and some base grammar
+(sense). The critical techniques are :
+\begin{itemize}
+\item Filter-destruct-binder (``clausal function definition''), binder(-expression)
+which binds itself (``val rec/fix'').
+\item (parametric) Accumulating continuation function which, for examples,
+(1) is used as exceptional-value handler, or is used as transformation/composition
+of some exceptional-value handler, or (2) is used as regexp matcher,
+or is used as transformation/composition of some regexp matchers,
+or is used as transformation/recursion onto some regex matchers.
+\item Polymorphism, multimorphim (``overloading'', ``hidden inferred
+argument'').
+\item Lists or trees as general form for any datatype, for example the datatype
+for memorizing/storing the code of the (``parsed'') base grammar
+text. And the alternative interfaces are commonly for complexity-performance
+questions such as queues (amortized constant time double-list) or
+such as log trees (logarithmic time/height balanced binary-search
+tree where each insertion does traced/flowed-reassociations to rebalance).
+\item Hidden outer (computational instead of only logical) parameter (``staging
+the closure''), which is some expression of the form `` fn x : nat
+=> let y := g x : nat in fn z : nat => ... ''. Two particularizations
+of this technique are : (1) shared address/reference/cell hidden outer
+parameter for ``object-oriented'' record of functions, (2) address/reference/cell
+hidden outer parameter for cached delayed evaluation (``lazy'').
+\item Code separation, code reuse/instantiation (``parametric modules/functors''),
+and external-logic (``opaque/abstract'') datatype with refined-to-internal-logic
+(effectable) operations which consequently preserve (``invariant'')
+the external-logical properties of the data and also consequently
+inherit the same sense (correctness).
+\end{itemize}
+\emph{Esquisse d'un programme} : The raw combinatorial (``permutation
+group'') angle converge to Aigner \cite{aigner}. Another parallel
+of the raw combinatorial techniques of Galois is the raw proof-programming
+techniques of Gentzen that inductive recursive arithmetic cannot well-order
+some ordinal. One question is whether the descent techniques and the
+proof-programming techniques can converge.
+\begin{itemize}
+\item The initial item shall be to internalize/functorialize the semantics
+of Dosen book and do automation programmation so to gather data and
+examples and experiments .. this is 1 page/day = 1 year memo writing.
+The automation programming technique has one common form mixing induction
+or simplification conversion or logical unification or substitution
+rewriting or repeated heuristic/attempt destructions (``punctuation/pause/insight'')
+or focused verified recursive grammatical decision-dissolver (``reflective
+decision procedure''); for example the form behind \emph{crush} of
+Chlipala CPDT \cite{chlipalacpdt} is :
+\end{itemize}
+{[} induction; \\
+(eval beta iota; auto logical unify; auto substitution rewrite); \\
+repeat ( (match goal | context match term => destruct); \\
+(eval beta iota; auto logical unify; auto substitution rewrite) );
+\\
+congruence; omega; anyreflection {]}
+\begin{itemize}
+\item The next item shall be to attempt whether the focused verified recursive
+grammatical decision-dissolver (``compositional computational reflection'')
+techniques in MirrorShard \cite{chlipala} and the terminology/logic
+translator (``synthesis/compiler of abstract data types'') techniques
+in Fiat \cite{chlipalafiat} are amenable to the categorical grammar
+and functorial and reflection senses. For example, in the diagram
+above, only in the context of SemiAssoc and Assoc as the senses, then
+can we put Modos to be Assoc as the meta grammar (maybe augmenting
+the base letters/constants to collect all the formulas/objects) and
+do some ``calculus of reifications''? Another example is to inquire
+how the extensible-parser capabilities of the computer together with
+these terminology-translator techniques (of Fiat) allow to communicate
+with the computer by using some easier more-human terminology.
+\item The final item shall be to memo Borceux books 1 and 2 and revisit
+Gross \cite{gross}, not only from the simplifying conversion angle
+or the unification (``logic programming'') angle or the substitution
+rewrite angle, but also from the focused verified recursive grammatical
+decision-dissolver and terminology/logic translator angle. This latter
+angle shall be related to descent techniques for existence (fullness)
+and identification (failfulness); so this would allow for hidden/inferred
+arguments to be resolved after descent or for some arguments to be
+programmed after descent to some easier terminology .. this is 3 pages/day
+= 1 year memo reading.
+\end{itemize}
+Some parallel necessary question is how such activities are simultaneously
+edited by different authors and effectively universally communicated
+and tutored/educated. One common obstruction is the non-uniformity
+of the vocabulary and the raw-expressivity terminology of the computer.
+Some solution shall be 
+\begin{itemize}
+\item to rephrase the basic reference books/encyclopedia/texts into some
+uniform mathematical vocabulary, for example one may say ``shared
+outer compulogical parameters'' instead of ``context'' or ``environment'',
+and this necessitates to inquire into the contrast/dual math-logic
+versus dia-para-logic, in the sense of Yanofsky ``The outer limits
+of reason'' : for example, what is ``noisea''? what is ``fool-and-theft''?
+what is ``tradeability''? what is ``time''? what is ``memory''?
+... , and 
+\item to simultaneously edit some web-internet page integrated with local
+in-browser automation proof-programmation using some easier-expressivity
+terminology and with hypertextual/cross-references programmation. 
+\end{itemize}
+The Ur/Web \cite{chlipalaurweb} database distributed unified-grammar
+programming gives some initial tools to attempt \cite{1337777} such
+solution. \input{cpp.v.tex}
+\begin{thebibliography}{10}
+\bibitem{gross}Jason Gross, Adam Chlipala, David I. Spivak. \textquotedblleft Experience
+Implementing a Performant Category-Theory Library in Coq\textquotedblright{}
+In: Interactive Theorem Proving. Springer, 2014.
+
+\bibitem{chlipala}Gregory Malecha, Adam Chlipala, Thomas Braibant.
+\textquotedblleft Compositional Computational Reflection\textquotedblright{}
+In: Interactive Theorem Proving. Springer, 2014.
+
+\bibitem{chlipalafiat}Benjamin Delaware, Clement Pit--Claudel, Jason
+Gross, Adam Chlipala. ``Fiat: Deductive Synthesis of Abstract Data
+Types in a Proof Assistant'' In: Principles of Programming Languages.
+ACM, 2015.
+
+\bibitem{chlipalaurweb}Adam Chlipala. ``Ur/Web: A Simple Model for
+Programming the Web'' In: Principles of Programming Languages. ACM,
+2015.
+
+\bibitem{1337777}1337777.org. ``1337777.org''\\
+\url{https://github.com/1337777/upo/}
+
+\bibitem{harper}Robert Harper. ``Programming in Standard ML''\\
+\url{http://www.cs.cmu.edu/~rwh/smlbook/}
+
+\bibitem{chlipalacpdt}Adam Chlipala. ``Certified Programming with
+Dependent Types''\\
+\url{http://adam.chlipala.net/cpdt/}
+
+\bibitem{dosen}Kosta Dosen, Zoran Petric. \textquotedblleft Proof-Theoretical
+Coherence\textquotedblright{} \\
+\url{http://www.mi.sanu.ac.rs/~kosta/coh.pdf} , 2007.
+
+\bibitem{aigner}Martin Aigner. ``Combinatorial Theory'' Springer,
+1997
+
+\bibitem{borceuxjanelidze}Francis Borceux, George Janelidze. \textquotedblleft Galois
+Theories\textquotedblright{} Cambridge University Press, 2001.
+
+\bibitem{borceux}Francis Borceux. \textquotedblleft Handbook of categorical
+algebra. Volumes 1 2 3\textquotedblright{} Cambridge University Press,
+1994.\end{thebibliography}
+
+\end{document}
